@@ -1,19 +1,26 @@
-import { google } from "googleapis";
-
 export async function appendPitchRow(row: (string | number)[]) {
-  const auth = new google.auth.JWT({
-    email: process.env.GOOGLE_SERVICE_ACCOUNT_EMAIL,
-    key: process.env.GOOGLE_PRIVATE_KEY?.replace(/\\n/g, "\n"),
-    scopes: ["https://www.googleapis.com/auth/spreadsheets"],
+  const url = process.env.GOOGLE_APPS_SCRIPT_URL;
+  const secret = process.env.GOOGLE_APPS_SCRIPT_SECRET;
+
+  if (!url || !secret) {
+    throw new Error(
+      "GOOGLE_APPS_SCRIPT_URL / GOOGLE_APPS_SCRIPT_SECRET are not configured."
+    );
+  }
+
+  const res = await fetch(url, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ secret, row }),
   });
 
-  const sheets = google.sheets({ version: "v4", auth });
+  const body = (await res.json().catch(() => null)) as
+    | { ok: boolean; error?: string }
+    | null;
 
-  await sheets.spreadsheets.values.append({
-    spreadsheetId: process.env.GOOGLE_SHEET_ID,
-    range: "Sheet1!A:V",
-    valueInputOption: "USER_ENTERED",
-    insertDataOption: "INSERT_ROWS",
-    requestBody: { values: [row] },
-  });
+  if (!res.ok || !body?.ok) {
+    throw new Error(
+      body?.error ?? `Apps Script request failed with status ${res.status}`
+    );
+  }
 }

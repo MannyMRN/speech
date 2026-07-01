@@ -31,10 +31,14 @@ A no-login digital version of the "Bossmoves: Shark Tank Finale Pitch" worksheet
 7. Set:
    - **Execute as:** Me (your account)
    - **Who has access:** Anyone
-8. Click **Deploy**, then **Authorize access** and approve the permissions (it's your own script acting on your own sheet).
+8. Click **Deploy**, then **Authorize access** and approve the permissions (it's your own script acting on your own sheet). The script uses Sheets, Docs, and Drive, so you'll see all three in the consent screen.
 9. Copy the **Web app URL** it gives you — it ends in `/exec`. That's your `GOOGLE_APPS_SCRIPT_URL`.
 
-> If you ever edit the script, you need to create a **new deployment** (or a new version of the existing one via Deploy → Manage deployments → Edit) for the changes to go live — saving the script alone doesn't update the deployed Web App.
+> If you ever edit the script, you need to create a **new deployment** (or a new version of the existing one via Deploy → Manage deployments → Edit) for the changes to go live — saving the script alone doesn't update the deployed Web App. If you add new permissions (like the Docs/Drive scopes below), you'll be asked to re-authorize.
+
+### Auto-generated pitch scripts
+
+Every submission also creates a Google Doc with that team's answers written out as a speaking script (organized by slide, with each speaker's lines and cues). These land in a Drive folder called **"Speech — Pitch Scripts"**, owned by whichever account you used for "Execute as" in step 7. If a Doc fails to generate for some reason, the row is still saved to the Sheet — the two aren't coupled.
 
 ## 3. Configure environment variables
 
